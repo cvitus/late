@@ -12,7 +12,7 @@ function Allocation(id,start,duration)
 //object handles allocation of assignments with it
 function time_block(start,end)
 {
-    return {
+		return {
 			//start time
 			start:start,
 			
@@ -25,15 +25,16 @@ function time_block(start,end)
 			//intervals where assignments are within the time_block
             allocated:[],
 			
-			//member function, returns true if given time is with the time_block
-			contains:function(time){return (this.start < time) && (time < this.end);},
+			//returns true if deadline is after the start of the interval
+			starts_before:function(time){return time >= this.start;},
             
             //schedules as much of the assignment as is possible
 			//reduces the allocated time from the inputed assignment object
             //returns true if the entire assingment fit
             fill_time: function(assignment){
-				//handle 0 assignments, nothing to do, just say it false
-                if(assignment.duration == 0) return true;
+				//handle 0 assignments, nothing to do
+                if(assignment.duration == 0) return;
+				if(this.remaining_mark == this.end) return;
 				
                 //if the assignment can fit, add the entire thing
                 if(this.end - this.remaining_mark > assignment.duration)
@@ -48,9 +49,6 @@ function time_block(start,end)
 					
                     //update time of assignment
                     assignment.duration = 0;
-					
-					//true = it fits
-                    return true;
                 }
 				
                 //if not add as much as will fit
@@ -66,11 +64,10 @@ function time_block(start,end)
 					
 					//update remaining mark
                     this.remaining_mark = end;
-                    
-					//false = it doesnt fit
-					return false;
                 }
-            }}
+            }
+		}
+			
 }
 
 function print_interval(input)
@@ -156,7 +153,7 @@ function Agenda(num_assignments,availible_time)
 //and inversely proporitonal to the time remaining
 function assignment_sort(a,b)
 {
-    return (b.priority/a.deadline)-(a.priority/a.deadline);
+    return (a.priority/a.deadline)-(b.priority/a.deadline);
 }
 exports.one = schedule_one;
 exports.two = schedule_two;

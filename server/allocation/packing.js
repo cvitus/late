@@ -6,13 +6,17 @@ var data = require("./inputs.js");
 function before_deadline(avalibility, deadline)
 {
     var out = [];
-    var block_index = 0;
-    do
-    {
-        out.push(avalibility[block_index]);
-        block_index++;
-    }
-    while(avalibility[block_index].contains(deadline));
+    for(var i = 0; i < avalibility.length; i++)
+	{
+		if(avalibility[i].starts_before(deadline))
+		{
+			out.push(avalibility[i]);
+		}
+		else
+		{
+			break;
+		}
+	}
     return out;
 }
 
@@ -20,16 +24,23 @@ function FFD(free_time,assignments)
 {
     for(var i = 0 ; i < assignments.length; i++)
     {   
+		console.log(i);
 		//hold current assignment
         var current = assignments[i];
 		
 		//retrieve the time_blocks that this assignent can be allocated
         var legal_blocks = before_deadline(free_time,current.deadline);
+		console.log("availible blocks");
+		data.print(legal_blocks);
         
 		//allocate assignent in the first places it will fit
+		//smear it across the continuum until it is empty
 		var j = 0;
-		while(legal_blocks[0].fill_time(current) && j < legal_blocks.length)
+		console.log(current.duration);
+		while(j < legal_blocks.length)
 		{
+			legal_blocks[j].fill_time(current)
+			console.log(current.duration);
 			j++;
 		}
 		
