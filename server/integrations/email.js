@@ -19,6 +19,24 @@ const emailFunctions = {
       }
     });
   },
+  async generateExamReminder (exam) {
+    const student = exam._student;
+
+    logger.info(`Sending exam reminder email to ${student.rcsID}@rpi.edu`);
+    return sgMail.send({
+      to: student.rcsID + '@rpi.edu',
+      from: 'LATE <thefrankmatranga@gmail.com>',
+      subject: 'Exam Reminder',
+      templateId: 'd-6740467da3334408b9a2e156175578cb',
+      dynamic_template_data: {
+        title: `Don't forget about <strong>${exam.title}</strong>`,
+        assessment: exam,
+        assessmentType: 'exam',
+        viewAssessmentButtonLink:
+          'https://rpi-late.herokuapp.com/assessments/e/' + exam.id
+      }
+    });
+  },
   async sendMorningReportEmail (student) {
     // Compile periods for the day
     const day = moment().day();

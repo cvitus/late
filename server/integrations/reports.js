@@ -1,10 +1,12 @@
 require('dotenv').config();
 require('../db');
 
-const smsUtils = require('./sms').utils;
-const discord = require('./discord');
 const moment = require('moment');
 const logger = require('../modules/logger');
+
+const smsUtils = require('./sms').utils;
+const discord = require('./discord');
+const email = require('./email');
 
 const Assignment = require('../api/assignments/assignments.model');
 const Exam = require('../api/exams/exams.model');
@@ -83,6 +85,54 @@ async function upcomingWorkBlockReminders () {
   }
 }
 
+async function upcomingExamReminders () {
+  logger.info('Finding all upcoming exams to send reminders.');
+  const terms = await Term.find().sort({ start: -1 });
+  const currentTerm = terms.find(t => t.isCurrent);
+
+  // Globally find all work blocks starting within 20 minutes
+  const nextWeek = moment()
+    .add('1', 'week')
+    .endOf('day');
+  const upcomingExams = await Block.find({
+    rcs_id: 'matraf',
+    startTime: {
+      $gt: new Date(),
+      $lte: nextWeek
+    },
+    notified: false
+  }).populate(
+    '_student',
+    'rcs_id name semester_schedules integrations notificationPreferences'
+  );
+
+  for (let exam of upcomingExams) {
+    // Check if user even wants these notifications
+    if (!exam._student.notificationPreferences.examReminder) continue;
+
+    // Text student
+    const integration = exam._student.notificationPreferences.examReminder;
+
+    logger.info(
+      `Reminding user ${exam._student.rcs_id} about ${
+        exam.title
+      } through ${integration}`
+    );
+
+    if (integration === 'sms') {
+      await smsUtils.generateExamReminder(terms, exam);
+    } else if (integration === 'discord') {
+      await discord.utils.generateExameminder(discord.client, exam);
+    } else if (integration === 'email') {
+      await email.generateExamReminder(exam);
+    }
+
+    exam.notified = true;
+    await exam.save();
+  }
+}
+
 module.exports = {
-  upcomingWorkBlockReminders
+  upcomingWorkBlockReminders,
+  upcomingExamReminders
 };
