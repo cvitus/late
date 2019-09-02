@@ -31,7 +31,7 @@
       <p id="sis-man-holder">
         <img
           title="Better LATE than never!"
-          src="@/assets/img/sisman.png"
+          src="@/assets/logo.png"
         >
       </p>
 
