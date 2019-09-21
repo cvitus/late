@@ -83,6 +83,7 @@
 
           <b-navbar-dropdown
             v-if="!onBreak"
+            hoverable
             class="is-hidden-touch"
             title="Manage your assignments and exams!"
           >
@@ -162,6 +163,7 @@
         </b-navbar-item>
 
         <b-navbar-dropdown
+          hoverable
           class="is-hidden-touch"
           title="Student tools to calculate grades, help you work/study, and more!"
         >
@@ -212,7 +214,7 @@
       <template slot="end">
         <a
           v-if="loggedIn"
-          class="navbar-item"
+          class="navbar-item is-hidden-touch"
           :title="`There are ${onlineUsers.length} users online.`"
         >
           <b-tag type="is-primary">{{ onlineUsers.length }} online</b-tag>
@@ -232,7 +234,10 @@
           </span>
         </a>
 
-        <b-navbar-dropdown v-if="loggedIn">
+        <b-navbar-dropdown
+          v-if="loggedIn"
+          hoverable
+        >
           <template slot="label">
             <span class="icon">
               <i
@@ -389,10 +394,6 @@ export default {
 
 <style lang="scss">
 
-// .has-dropdown:hover .navbar-dropdown {
-//     animation: navAnimOpen 0.15s ease-in-out;
-// }
-
 @keyframes bellshake {
   0% {
     transform: rotate(0);
@@ -444,7 +445,7 @@ export default {
     transition-timing-function: ease-out;
   }
 
-  .has-dropdown.is-active .navbar-link::after {
+  .has-dropdown.is-active .navbar-link::after,.has-dropdown:hover .navbar-link::after  {
     transform: translateY(3px) rotate(135deg);
   }
   // ---------------------
@@ -452,10 +453,16 @@ export default {
   .late-logo {
     font-weight: 800;
     font-size: 1.5em;
+    background-color: transparent;
 
     .beta-tag {
       margin-left: 5px;
     }
+  }
+
+  //Manually defined logo hover
+  .late-logo:hover {
+    background-color: #253048;
   }
 
   .navbar-item span.icon {
@@ -509,38 +516,39 @@ export default {
 
 // }
 
-// //Mobile dropdown mediaquery
-// @media only screen and (max-width: 1024px) {
-//   //Force navbar to take up whole screen
-//   .navbar-menu {
-//     min-height: 95vh;
-//     background-color: white;
-//   }
-//   //Remove onlineCount and dropdown arrows
-//   .onlineCount,.navbar-link:not(.is-arrowless)::after { display: none; }
-//   //Increase size of buttons without dropdowns
-//   .home-link,.toolsDropdown {
-//     padding-top: 15px;
-//     padding-bottom: 15px;
-//   }
-//   //Remove tools dropdown (mobile users can use index page)
-//   .toolsDropdown .navbar-dropdown {
-//     display: none;
-//   }
-//   //Shift all child items to right and add border
-//   .navbar-item {
-//     &.has-dropdown {
-//       .navbar-dropdown {
-//         border-left: 1px solid black;
-//         padding: 0px;
-//         margin-left: 25px;
-//       }
-//       &.is-active {
-//         .navbar-dropdown {
-//           display: block;
-//         }
-//        }
-//      }
-//   }
-// }
+@media only screen and (min-width: 1024px) {
+   .has-dropdown:hover .navbar-dropdown {
+     animation: navAnimOpen 0.15s ease-in-out;
+ }
+}
+
+//Mobile dropdown mediaquery
+@media only screen and (max-width: 1024px) {
+  //Remove onlineCount and dropdown arrows
+  .onlineCount,.navbar-link:not(.is-arrowless)::after { display: none; }
+  //Increase size of buttons without dropdowns
+  .home-link,.toolsDropdown {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  //Remove tools dropdown (mobile users can use index page)
+  .toolsDropdown .navbar-dropdown {
+    display: none;
+  }
+  //Shift all child items to right and add border
+  .navbar-item {
+    &.has-dropdown {
+      .navbar-dropdown {
+        border-left: 1px solid black;
+        padding: 0px;
+        margin-left: 25px;
+      }
+      &.is-active {
+        .navbar-dropdown {
+          display: block;
+        }
+       }
+     }
+  }
+}
 </style>
