@@ -1,0 +1,31 @@
+{
+  "name": "LATE Extension",
+  "manifest_version": 2,
+  "version": "0.0.1",
+  "content_scripts": [
+      {
+          "matches": [
+              "<all_urls>"
+          ],
+          "js": ["jquery.js", "submitty.js"],
+          "css": ["submitty.css"]
+      }
+  ],
+  "background": {
+      "js": ["background.js"]
+  },
+  "permissions": [
+      "https://*/*",
+      "http://*/*",
+      "tabs",
+      "storage"
+  ],
+  "web_accessible_resources": [
+      "res/late.png"  
+  ],
+  "icons": {
+      "16": "res/late16.png",
+      "48": "res/late48.png",
+      "128": "res/late128.png"
+  } 
+}
