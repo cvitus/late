@@ -1,7 +1,7 @@
 const fs = require('fs')
 const aws = require('aws-sdk')
 const s3 = new aws.S3()
-const logger = require('../../modules/logger')
+const logger = require('../../../modules/logger')
 
 const sharp = require('sharp')
 
