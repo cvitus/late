@@ -1,4 +1,4 @@
-const logger = require('../../../modules/logger')
+const logger = require('../../modules/logger')
 
 const Dorm = require('./dorms.model')
 

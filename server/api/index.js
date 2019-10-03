@@ -24,7 +24,8 @@ router.use('/todos', require('./todos'))
 router.use('/announcements', require('./announcements'))
 router.use('/checklists', require('./checklists'))
 router.use('/quicklinks', require('./quicklinks'))
-router.use('/dormphotos', require('./dorms/dormphotos'))
+router.use('/dormphotos', require('./dorms/dormphotos')) // DEPRECATED - Use /dorms/photos
+router.use('/dorms', require('./dorms'))
 router.use('/sms', require('./sms'))
 
 const sgMail = require('@sendgrid/mail')
